@@ -77,7 +77,7 @@ fn run_wallpaper(app: tauri::AppHandle, intensity: String) {
         if let Ok(handle) = wall.window_handle() {
             use raw_window_handle::RawWindowHandle;
             if let RawWindowHandle::Win32(h) = handle.as_ref() {
-                let hwnd = HWND(h.hwnd.get() as *mut _);
+                let hwnd = HWND(h.hwnd.get() as isize);
                 wallpaper::attach(hwnd);
             }
         }
