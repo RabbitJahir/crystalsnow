@@ -4,7 +4,8 @@
   "version": "0.1.0",
   "identifier": "com.rabbit.crystalsnow",
   "build": {
-    "frontendDist": "../src"
+    "frontendDist": "../src",
+    "beforeBuildCommand": "npm install"
   },
   "app": {
     "withGlobalTauri": true,
