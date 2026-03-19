@@ -14,7 +14,7 @@ mod wallpaper {
 
     unsafe extern "system" fn find_worker_w(hwnd: HWND, lparam: LPARAM) -> BOOL {
         let shell = FindWindowExA(hwnd, HWND::default(), s!("SHELLDLL_DefView"), None);
-        if shell != HWND::default() {
+        if shell.0 != 0 {
             let worker = FindWindowExA(HWND::default(), hwnd, s!("WorkerW"), None);
             *(lparam.0 as *mut HWND) = worker;
         }
@@ -30,7 +30,7 @@ mod wallpaper {
                 Some(find_worker_w),
                 LPARAM(&mut worker_w as *mut HWND as isize),
             );
-            if worker_w != HWND::default() {
+            if worker_w.0 != 0 {
                 SetParent(hwnd, worker_w);
             }
         }
@@ -43,11 +43,9 @@ mod wallpaper {
 
     pub fn attach(title: &str) {
         std::thread::sleep(std::time::Duration::from_millis(800));
-
         Command::new("wmctrl").args(["-r", title, "-t", "-1"]).spawn().ok();
         Command::new("wmctrl").args(["-r", title, "-b", "add,below"]).spawn().ok();
         Command::new("wmctrl").args(["-r", title, "-b", "add,skip_taskbar,skip_pager"]).spawn().ok();
-
         if let Ok(out) = Command::new("xdotool").args(["search", "--name", title]).output() {
             let wid = String::from_utf8_lossy(&out.stdout).trim().to_string();
             if let Some(wid) = wid.lines().next() {
@@ -73,11 +71,13 @@ fn run_wallpaper(app: tauri::AppHandle, intensity: String) {
 
     #[cfg(target_os = "windows")]
     {
-        use raw_window_handle::{HasWindowHandle, RawWindowHandle};
+        use raw_window_handle::HasWindowHandle;
         use windows::Win32::Foundation::HWND;
+
         if let Ok(handle) = wall.window_handle() {
+            use raw_window_handle::RawWindowHandle;
             if let RawWindowHandle::Win32(h) = handle.as_ref() {
-                let hwnd = HWND(isize::from(h.hwnd) as *mut _);
+                let hwnd = HWND(h.hwnd.get() as *mut _);
                 wallpaper::attach(hwnd);
             }
         }
@@ -94,9 +94,9 @@ fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![run_wallpaper])
         .setup(|app| {
-            let settings = MenuItem::with_id(app, "settings", "Settings",    true, None::<&str>)?;
-            let none     = MenuItem::with_id(app, "none",     "✕  None",     true, None::<&str>)?;
-            let quit     = MenuItem::with_id(app, "quit",     "Quit",        true, None::<&str>)?;
+            let settings = MenuItem::with_id(app, "settings", "Settings", true, None::<&str>)?;
+            let none     = MenuItem::with_id(app, "none",     "✕  None",  true, None::<&str>)?;
+            let quit     = MenuItem::with_id(app, "quit",     "Quit",     true, None::<&str>)?;
 
             let menu = Menu::with_items(app, &[&settings, &none, &quit])?;
 
