@@ -19,7 +19,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install Tauri CLI
-        run: npm install -g @tauri-apps/cli@2
+        run: npm install -g @tauri-apps/cli@^2.0.0
 
       - name: Install dependencies
         run: npm install
