@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "crystalsnow",
+  "version": "0.1.0",
+  "identifier": "com.rabbit.crystalsnow",
+  "build": {
+    "frontendDist": "../src"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "home",
+        "title": "Crystal Snow",
+        "width": 520,
+        "height": 680,
+        "decorations": true,
+        "transparent": false,
+        "resizable": true,
+        "center": true,
+        "visible": true
+      },
+      {
+        "label": "wallpaper",
+        "title": "Crystal Snow Wallpaper",
+        "url": "wallpaper.html",
+        "width": 1920,
+        "height": 1080,
+        "x": 0,
+        "y": 0,
+        "decorations": false,
+        "transparent": true,
+        "skipTaskbar": true,
+        "resizable": false,
+        "visible": false,
+        "fullscreen": false
+      }
+    ],
+    "trayIcon": {
+      "id": "main-tray",
+      "iconPath": "icons/icon.ico",
+      "tooltip": "Crystal Snow"
+    },
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}
