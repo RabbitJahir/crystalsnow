@@ -24,6 +24,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Debug config
+        run: |
+          cat src-tauri/tauri.conf.json
+          npx tauri info
+
       - name: Build
         run: npx tauri build
 
